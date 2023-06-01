@@ -13,7 +13,7 @@ from gtts import gTTS
 print("imports")
 
 # okay this is gonna be really bad but let's try it
-with open('cardnames.json', 'r') as fi:
+with open('data/cardnames.json', 'r') as fi:
     cardnames = json.load(fi)
 
 def check_for_cardname(text_in):
@@ -29,7 +29,7 @@ def berate_match(card_name):
     soundbite = gTTS(text=message, lang='en', slow=False)
     soundbite.save("temp.mp3")
     time.sleep(0.1)
-    voiceover = AudioSegment.from_mp3("temp.mp3")
+    voiceover = AudioSegment.from_mp3("temp/temp.mp3")
     play(voiceover)
 # this is called from the background thread
 def callback(recognizer, audio):

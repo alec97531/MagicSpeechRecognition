@@ -1,5 +1,11 @@
 import json
 import re
+import requests
+def download_scryfall_data():
+    response = requests.get("https://data.scryfall.io/oracle-cards/oracle-cards-20230601210358.json")
+    response = response.json()
+    with open("data/scryfall_data.json", "w", encoding="utf-8") as fi:
+        json.dump(response, fi)
 
 def extract_cards(file_in):
     with open(file_in, 'r', encoding="utf-8") as fi:
@@ -62,15 +68,12 @@ def load_names(file_out, data):
         json.dump(data, json_file)
 
 if __name__ == "__main__":
-    cards=extract_cards("oracle-cards.json")
+    download_scryfall_data()
+    cards=extract_cards("data/scryfall_data.json")
     print(f"extracted {len(cards)}")
-
     EXCLUDED_SET_TYPES = ["token", "memorabilia"]
     cards = [x for x in cards if x['set_type'] not in EXCLUDED_SET_TYPES]
     print(f"trimmed tokens: {len(cards)}")
-
-
-
     card_data = pluck_card_data(cards)
     print(f"plucked {len(card_data)}")
     card_data = remove_arena_cards(card_data)
@@ -80,4 +83,4 @@ if __name__ == "__main__":
     card_data = clean_up_names(card_data)
     card_data = key_by_name(card_data)
     print(f"loading {len(card_data)}")
-    load_names("cardnames.json", card_data)
+    load_names("data/cardnames.json", card_data)
