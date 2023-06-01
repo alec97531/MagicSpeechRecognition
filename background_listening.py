@@ -5,7 +5,7 @@ print("entered")
 import time
 import json
 import speech_recognition as sr
-import os
+# import os
 from pydub import AudioSegment
 from pydub.playback import play
 
@@ -27,7 +27,7 @@ def check_for_cardname(text_in):
 def berate_match(card_name):
     message = f"You just said {card_name}"
     soundbite = gTTS(text=message, lang='en', slow=False)
-    soundbite.save("temp.mp3")
+    soundbite.save("temp/temp.mp3")
     time.sleep(0.1)
     voiceover = AudioSegment.from_mp3("temp/temp.mp3")
     play(voiceover)
