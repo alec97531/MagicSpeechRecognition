@@ -46,6 +46,7 @@ class MainLayout(BoxLayout):
 
 class SpeechRecognitionApp(App):
     def build(self):
+        prepare_card_names()
         self.microphone_muted = False
         self.cardnames = self.load_cardnames()
         self.recognizer = sr.Recognizer()
@@ -57,7 +58,6 @@ class SpeechRecognitionApp(App):
         self.log_label = layout.ids.log_label
 
         return layout
-
     def load_cardnames(self):
         with open('data/cardnames.json', 'r') as file:
             return json.load(file)
@@ -125,7 +125,7 @@ class SpeechRecognitionApp(App):
         config.setdefaults('Card Settings', {'filter_by_format': 'legacy'})
 
     def build_settings(self, settings):
-        settings.add_json_panel('Card Settings', self.config, "data/settings.json")
+        settings.add_json_panel('Card Settings', self.config, "settings.json")
 
 
     def reload_cards(self):
@@ -135,5 +135,8 @@ class SpeechRecognitionApp(App):
             format_filter = None
         prepare_card_names(format_filter=format_filter)
         self.cardnames = self.load_cardnames()
+import os
 if __name__ == '__main__':
+    if not os.path.exists('data'):
+        os.mkdir('data')
     SpeechRecognitionApp().run()

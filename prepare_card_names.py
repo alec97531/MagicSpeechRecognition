@@ -8,8 +8,13 @@ def download_scryfall_data():
         json.dump(response, fi)
 
 def extract_cards(file_in):
-    with open(file_in, 'r', encoding="utf-8") as fi:
-        card_data = json.load(fi)
+    try:
+        with open(file_in, 'r', encoding="utf-8") as fi:
+            card_data = json.load(fi)
+    except FileNotFoundError:
+        download_scryfall_data()
+        with open(file_in, 'r', encoding="utf-8") as fi:
+            card_data = json.load(fi)
     return card_data
 
 def pluck_card_data(card_data):
