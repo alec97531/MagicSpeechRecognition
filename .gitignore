@@ -1,4 +1,5 @@
 data/*
 temp/*
+bin/*
 .buildozer/*
 __pycache__/*
