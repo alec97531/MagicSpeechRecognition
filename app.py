@@ -13,15 +13,28 @@ from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 from kivy.clock import Clock
 
+
+from prepare_card_names import prepare_card_names
+
 Builder.load_string('''
 <MainLayout>:
     orientation: 'vertical'
-    ToggleButton:
-        id: mute_button
-        text: 'Microphone Listening'
-        on_state: app.toggle_microphone(self.state)
+    BoxLayout:
         size_hint_y: 0.2
-        background_color: 0, 1, 0, 1
+        Button:
+            id: settings_button
+            text: 'Settings'
+            on_release: app.open_settings()
+        Button:
+            id: reload_button
+            text: 'reload cards'
+            on_release: app.reload_cards()
+        ToggleButton:
+            id: mute_button
+            text: 'Microphone Listening'
+            on_state: app.toggle_microphone(self.state)
+            size_hint_x: 0.4
+            background_color: 0, 1, 0, 1
     TextInput:
         id: log_label
         readonly: True
@@ -29,6 +42,7 @@ Builder.load_string('''
 
 class MainLayout(BoxLayout):
     pass
+
 
 class SpeechRecognitionApp(App):
     def build(self):
@@ -106,5 +120,20 @@ class SpeechRecognitionApp(App):
     def log(self, message):
         self.log_label.text += message + '\n'
 
+
+    def build_config(self, config):
+        config.setdefaults('Card Settings', {'filter_by_format': 'legacy'})
+
+    def build_settings(self, settings):
+        settings.add_json_panel('Card Settings', self.config, "data/settings.json")
+
+
+    def reload_cards(self):
+        VALID_FORMATS = ["legacy", "standard", "vintage", "commander", "pioneer", "modern"]
+        format_filter = self.config.get("Card Settings", 'filter_by_format')
+        if format_filter not in VALID_FORMATS:
+            format_filter = None
+        prepare_card_names(format_filter=format_filter)
+        self.cardnames = self.load_cardnames()
 if __name__ == '__main__':
     SpeechRecognitionApp().run()
