@@ -1,6 +1,8 @@
 import time
 import json
-import speech_recognition as sr
+import android
+from android.storage import app_storage_path
+from android.permissions import request_permissions, Permission
 from pydub import AudioSegment
 from pydub.playback import play
 from gtts import gTTS
@@ -12,8 +14,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 from kivy.clock import Clock
-
-
+import os
 from prepare_card_names import prepare_card_names
 
 Builder.load_string('''
@@ -46,20 +47,20 @@ class MainLayout(BoxLayout):
 
 class SpeechRecognitionApp(App):
     def build(self):
-        prepare_card_names()
         self.microphone_muted = False
+        self.storage_path = app_storage_path()+"/"
+        print(f"storage path: {self.storage_path}")
+        prepare_card_names(path=self.storage_path)
         self.cardnames = self.load_cardnames()
-        self.recognizer = sr.Recognizer()
-        self.microphone = sr.Microphone()
-        self.recognizer_callback = None
-        self.start_listening()
+        # self.droid = android.Android()
+        # self.start_listening()
 
         layout = MainLayout()
         self.log_label = layout.ids.log_label
 
         return layout
     def load_cardnames(self):
-        with open('data/cardnames.json', 'r') as file:
+        with open(f'{self.storage_path}/data/cardnames.json', 'r') as file:
             return json.load(file)
 
     def check_for_cardname(self, text_in):
@@ -71,11 +72,14 @@ class SpeechRecognitionApp(App):
         return False
 
     def berate_match(self, card_name):
+        fpath = self.storage_path+"temp/"
+        if not os.path.exists(fpath):
+            os.mkdir(fpath)
         message = f"You just said {card_name}"
         soundbite = gTTS(text=message, lang='en', slow=False)
-        soundbite.save("temp/temp.mp3")
+        soundbite.save(f"{fpath}temp.mp3")
         time.sleep(0.1)
-        voiceover = AudioSegment.from_mp3("temp/temp.mp3")
+        voiceover = AudioSegment.from_mp3(f"{fpath}temp.mp3")
         play(voiceover)
 
     def handle_recognition(self, recognizer, audio):
@@ -88,10 +92,10 @@ class SpeechRecognitionApp(App):
             if card_match:
                 self.schedule_log(f"Detected {card_match['name']}: {card_match['url']}")
                 self.berate_match(card_match['name'])
-        except sr.UnknownValueError:
-            self.schedule_log("Google Speech Recognition could not understand audio")
-        except sr.RequestError as e:
-            self.schedule_log("Could not request results from Google Speech Recognition service; {0}".format(e))
+        # except sr.UnknownValueError:
+        #     self.schedule_log("Google Speech Recognition could not understand audio")
+        # except sr.RequestError as e:
+        #     self.schedule_log("Could not request results from Google Speech Recognition service; {0}".format(e))
         except Exception as e:
             self.schedule_log(f"Hit: {e}")
 
@@ -106,11 +110,14 @@ class SpeechRecognitionApp(App):
             mute_button.text = "Microphone Listening"
             mute_button.background_color = (0, 1, 0, 1)  # Red color
 
+    # def start_listening(self):
+    #     with self.microphone as source:
+    #         self.recognizer.adjust_for_ambient_noise(source)
+    #     self.recognizer_callback = self.recognizer.listen_in_background(self.microphone, self.handle_recognition)
     def start_listening(self):
-        with self.microphone as source:
-            self.recognizer.adjust_for_ambient_noise(source)
-        self.recognizer_callback = self.recognizer.listen_in_background(self.microphone, self.handle_recognition)
-
+        (id, result, error) = self.droid.recognizeSpeech("say something")
+        print(f"{result} : {error}")
+    
     def on_stop(self):
         self.recognizer_callback(wait_for_stop=False)
 
@@ -133,10 +140,8 @@ class SpeechRecognitionApp(App):
         format_filter = self.config.get("Card Settings", 'filter_by_format')
         if format_filter not in VALID_FORMATS:
             format_filter = None
-        prepare_card_names(format_filter=format_filter)
+        prepare_card_names(path=self.storage_path, format_filter=format_filter)
         self.cardnames = self.load_cardnames()
-import os
 if __name__ == '__main__':
-    if not os.path.exists('data'):
-        os.mkdir('data')
+    request_permissions([Permission.INTERNET, Permission.RECORD_AUDIO])
     SpeechRecognitionApp().run()

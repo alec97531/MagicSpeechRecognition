@@ -37,7 +37,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,appdirs,buildozer,certifi,charset-normalizer,click,colorama,Cython,distlib,docutils,filelock,gTTS,idna,Jinja2,Kivy,Kivy-Garden,MarkupSafe,packaging,pep517,pexpect,platformdirs,ptyprocess,PyAudio,pydub,Pygments,requests,sh,SpeechRecognition,toml,tomli,urllib3,virtualenv
+requirements = python3,appdirs,buildozer,certifi,charset-normalizer,click,colorama,Cython,distlib,docutils,filelock,gTTS,idna,Jinja2,Kivy,Kivy-Garden,MarkupSafe,packaging,pep517,pexpect,platformdirs,ptyprocess,pydub,Pygments,requests,sh,toml,tomli,urllib3,virtualenv
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -96,6 +96,7 @@ fullscreen = 0
 # (list) Permissions
 # (See https://python-for-android.readthedocs.io/en/latest/buildoptions/#build-options-1 for all the supported syntaxes and properties)
 #android.permissions = android.permission.INTERNET, (name=android.permission.WRITE_EXTERNAL_STORAGE;maxSdkVersion=18)
+android.permissions = android.permission.INTERNET, android.permission.RECORD_AUDIO
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host

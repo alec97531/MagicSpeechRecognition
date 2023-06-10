@@ -1,19 +1,27 @@
 import json
 import re
 import requests
-def download_scryfall_data():
+import os
+def download_scryfall_data(fpath, fname):
+
+    if not os.path.exists(fpath):
+        os.mkdir(fpath)
     response = requests.get("https://data.scryfall.io/oracle-cards/oracle-cards-20230601210358.json")
     response = response.json()
-    with open("data/scryfall_data.json", "w", encoding="utf-8") as fi:
+    print(f"downloaded {len(response)} card data")
+    print(f"writing to {fpath+fname}")
+    with open(fpath+fname, "w", encoding="utf-8") as fi:
         json.dump(response, fi)
+    print(f"write to {fpath+fname} finished")
 
-def extract_cards(file_in):
+def extract_cards(fpath, fname):
     try:
-        with open(file_in, 'r', encoding="utf-8") as fi:
+        with open(fpath+fname, 'r', encoding="utf-8") as fi:
             card_data = json.load(fi)
     except FileNotFoundError:
-        download_scryfall_data()
-        with open(file_in, 'r', encoding="utf-8") as fi:
+        print("didn't find scryfall_data.json- downloading...")
+        download_scryfall_data(fpath, fname)
+        with open(fpath+fname, 'r', encoding="utf-8") as fi:
             card_data = json.load(fi)
     return card_data
 
@@ -78,8 +86,8 @@ def filter_by_format(card_data, format_filter):
     else:
         return card_data
 
-def prepare_card_names(format_filter=None):
-    cards=extract_cards("data/scryfall_data.json")
+def prepare_card_names(path="", format_filter=None):
+    cards=extract_cards(f"{path}data/", "scryfall_data.json")
     print(f"extracted {len(cards)}")
     EXCLUDED_SET_TYPES = ["token", "memorabilia"]
     cards = [x for x in cards if x['set_type'] not in EXCLUDED_SET_TYPES]
@@ -94,7 +102,7 @@ def prepare_card_names(format_filter=None):
     card_data = clean_up_names(card_data)
     card_data = key_by_name(card_data)
     print(f"loading {len(card_data)}")
-    load_names("data/cardnames.json", card_data)
+    load_names(f"{path}data/cardnames.json", card_data)
 
 if __name__ == "__main__":
     # download_scryfall_data()

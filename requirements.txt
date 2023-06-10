@@ -19,12 +19,10 @@ pep517==0.13.0
 pexpect==4.8.0
 platformdirs==3.5.1
 ptyprocess==0.7.0
-PyAudio==0.2.12
 pydub==0.25.1
 Pygments==2.15.1
 requests==2.31.0
 sh==1.14.3
-SpeechRecognition==3.10.0
 toml==0.10.2
 tomli==2.0.1
 urllib3==1.26.5
