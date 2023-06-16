@@ -183,9 +183,6 @@ class SpeechRecognitionApp(App):
                 break
 
         try:
-            # text = recognizer.recognize_assemblyai(audio_path, "d5fc9bd744414c5092fffd34a25f59de")
-            # text = recognizer.recognize_sphinx(audio)
-            # text = recognizer.recognize_google(audio)
             self.schedule_log("I: " + text)
             card_match = self.check_for_cardname(text.lower())
             if card_match:
