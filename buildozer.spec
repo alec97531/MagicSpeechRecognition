@@ -13,7 +13,7 @@ package.domain = org.test
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py,png,jpg,kv,atlas,json,wav,mp3
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -23,6 +23,7 @@ source.include_exts = py,png,jpg,kv,atlas
 
 # (list) List of directory to exclude (let empty to not exclude anything)
 #source.exclude_dirs = tests, bin, venv
+source.exclude_dirs = kivy_venv,data
 
 # (list) List of exclusions using pattern matching
 # Do not prefix with './'
@@ -37,7 +38,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,appdirs,buildozer,certifi,charset-normalizer,click,colorama,Cython,distlib,docutils,filelock,gTTS,idna,Jinja2,Kivy,Kivy-Garden,MarkupSafe,packaging,pep517,pexpect,platformdirs,ptyprocess,pydub,Pygments,requests,sh,toml,tomli,urllib3,virtualenv
+requirements = python3,speechrecognition,jnius,appdirs,buildozer,certifi,charset-normalizer,click,colorama,Cython,distlib,docutils,filelock,gTTS,idna,Jinja2,Kivy,Kivy-Garden,MarkupSafe,packaging,pep517,pexpect,platformdirs,ptyprocess,pydub,Pygments,requests,sh,toml,tomli,urllib3,virtualenv
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -102,7 +103,7 @@ android.permissions = android.permission.INTERNET, android.permission.RECORD_AUD
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-#android.api = 31
+android.api = 31
 
 # (int) Minimum API your APK / AAB will support.
 #android.minapi = 21
