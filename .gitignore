@@ -5,3 +5,5 @@ android_native/.buildozer/*
 android_native/.idea/*
 android_native/secrets/*
 android_native/__pycache__/*
+desktop/data/*
+desktop/temp/*
