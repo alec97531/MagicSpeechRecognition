@@ -1,7 +1,7 @@
-data/*
-temp/*
-bin/*
-.buildozer/*
-.idea/*
-secrets/assemblyai_api_key.txt
-__pycache__/*
+android_native/data/*
+android_native/temp/*
+android_native/bin/*
+android_native/.buildozer/*
+android_native/.idea/*
+android_native/secrets/*
+android_native/__pycache__/*
